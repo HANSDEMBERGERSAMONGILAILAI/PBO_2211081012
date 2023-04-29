@@ -5,6 +5,7 @@
 package Hansdemberger150423.Controler;
 import Hansdemberger150423.View.FormPeminjaman;
 import Hansdemberger150423.Model.*;
+import java.util.*;
 import javax.swing.table.DefaultTableModel;
 /**
  *
@@ -14,23 +15,44 @@ public class PeminjamanController {
     private FormPeminjaman formPeminjaman;
     private PeminjamanDao peminjamanDao;
     private Peminjaman peminjaman;
+    private AnggotaDao anggotaDao;
+    private BukuDao bukuDao;
     
     public PeminjamanController (FormPeminjaman formPeminjaman){
         this.formPeminjaman = formPeminjaman;
-        peminjamanDao = new PeminjamanDaoImpl();   
+        peminjamanDao = new PeminjamanDaoImpl();
+        anggotaDao = new AnggotaDaoImpl();
+        bukuDao = new BukuDaoImpl();
     }
     
     public void bersihForm(){
-        formPeminjaman.getTxtNoBp().setText("");
-        formPeminjaman.getTxtkodebuku().setText("");
         formPeminjaman.getTxttglpinjam().setText("");
         formPeminjaman.getTxttglkembali().setText("");
     }
     
+    public void isiCombo(){
+        List<Anggota> listAnggota = anggotaDao.getAll();
+        List<Buku> listBuku = bukuDao.getAll();
+        formPeminjaman.getCboAnggota().removeAllItems();
+        formPeminjaman.getCboBuku().removeAllItems();
+        
+        //isi anggota
+        for (Anggota anggota : listAnggota){
+           formPeminjaman.getCboAnggota().addItem(anggota.getNobp());
+        }
+        
+        for (Buku buku : listBuku){
+           formPeminjaman.getCboBuku().addItem(buku.getKode());
+            
+        }
+        
+    }
+    
     public void savePeminjaman(){
         peminjaman = new Peminjaman();
-        peminjaman.setNoBp(formPeminjaman.getTxtNoBp().getText());
-        peminjaman.setkodebuku(formPeminjaman.getTxtkodebuku().getText());
+        peminjaman.setAnggota(
+ anggotaDao.getAnggota(formPeminjaman.getCboAnggota().getSelectedIndex()));
+        bukuDao.getBuku(formPeminjaman.getCboBuku().getSelectedIndex());
         peminjaman.settglpinjam(formPeminjaman.getTxttglpinjam().getText());
         peminjaman.settglkembali(formPeminjaman.getTxttglkembali().getText());
         peminjamanDao.save(peminjaman);
@@ -42,8 +64,8 @@ public class PeminjamanController {
         int index = formPeminjaman.getTblPeminjaman().getSelectedRow();
         peminjaman = peminjamanDao.getPeminjaman(index);
         if(peminjaman != null){
-            formPeminjaman.getTxtNoBp().setText(peminjaman.getNobp());
-            formPeminjaman.getTxtkodebuku().setText(peminjaman.getKodebuku());
+            formPeminjaman.getCboAnggota().setSelectedItem(peminjaman.getAnggota().getNobp());
+            formPeminjaman.getCboBuku().setSelectedItem(peminjaman.getbuku().getKode());
             formPeminjaman.getTxttglpinjam().setText(peminjaman.gettglpinjam());
             formPeminjaman.getTxttglkembali().setText(peminjaman.gettglkembali());
         }
@@ -51,25 +73,22 @@ public class PeminjamanController {
     
     public void updatePeminjaman(){
     int index = formPeminjaman.getTblPeminjaman().getSelectedRow();
-    peminjaman = peminjamanDao.getPeminjaman(index);
-    if(peminjaman != null){
-        peminjaman.setNoBp(formPeminjaman.getTxtNoBp().getText());
-        peminjaman.setkodebuku(formPeminjaman.getTxtkodebuku().getText());
+        peminjaman.setAnggota(
+ anggotaDao.getAnggota(formPeminjaman.getCboAnggota().getSelectedIndex()));
+        bukuDao.getBuku(formPeminjaman.getCboBuku().getSelectedIndex());
         peminjaman.settglpinjam(formPeminjaman.getTxttglpinjam().getText());
         peminjaman.settglkembali(formPeminjaman.getTxttglkembali().getText());
         peminjamanDao.update(index, peminjaman);
         javax.swing.JOptionPane.showMessageDialog(formPeminjaman,
             "Update Ok");
     }
-}
+
 
 public void deletePeminjaman(){
     int index = formPeminjaman.getTblPeminjaman().getSelectedRow();
-    peminjaman = peminjamanDao.getPeminjaman(index);
-    if(peminjaman != null){
-        peminjamanDao.delete(index);
-        javax.swing.JOptionPane.showMessageDialog(formPeminjaman, "Delete");
-    }
+    peminjamanDao.delete(index);
+    javax.swing.JOptionPane.showMessageDialog(formPeminjaman,
+            "Delete ok");
 }
 
     
@@ -80,8 +99,9 @@ public void deletePeminjaman(){
         java.util.List<Peminjaman>List = peminjamanDao.getAll();
         for(Peminjaman peminjaman : List){
             Object[] data = {
-                peminjaman.getNobp(),
-                peminjaman.getKodebuku(),
+                peminjaman.getAnggota().getNobp(),
+                peminjaman.getAnggota().getNama(),
+                peminjaman.getbuku().getKode(),
                 peminjaman.gettglpinjam(),
                 peminjaman.gettglkembali(),
             };
@@ -89,6 +109,7 @@ public void deletePeminjaman(){
             }
             
         }
+}
         
-    }
+    
 
