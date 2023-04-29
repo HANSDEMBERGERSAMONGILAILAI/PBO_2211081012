@@ -2,6 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 package Hansdemberger150423.Model;
 
 /**
@@ -9,33 +10,34 @@ package Hansdemberger150423.Model;
  * @author HP
  */
 public class Peminjaman {
-    private String nobp;
-    private String kodebuku;
+    private Anggota anggota;
+    private Buku buku;
     private String tglpinjam;
     private String tglkembali;
+    
     public Peminjaman() {}
-    public Peminjaman(String nobp, String kodebuku, String tglpinjam, String tglkembali) {
-        this.nobp = nobp;
-        this.kodebuku = kodebuku;
+    public Peminjaman(Anggota anggota, Buku buku, String tglpinjam, String tglkembali) {
+        this.anggota = anggota;
+        this.buku = buku;
         this.tglpinjam = tglpinjam;
         this.tglkembali = tglkembali;
     }
     
     // getters and setters
-    public String getNobp() {
-        return nobp;
+    public Anggota getAnggota() {
+        return anggota;
     }
 
-    public void setNoBp(String nobp) {
-        this.nobp = nobp;
+    public void setAnggota(Anggota anggota) {
+        this.anggota = anggota;
     }
 
-    public String getKodebuku() {
-        return kodebuku;
+    public Buku getbuku() {
+        return buku;
     }
 
-    public void setkodebuku(String kodebuku) {
-        this.kodebuku = kodebuku;
+    public void setbuku(Buku buku) {
+        this.buku = buku;
     }
 
     public String gettglpinjam() {
